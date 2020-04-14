@@ -1,4 +1,4 @@
-#!/usr/bin/env pybricks-micropython
+#!/usr/bin/python3
 from ev3dev2.auto import *
 
 m1 = Motor(OUTPUT_A)
