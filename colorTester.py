@@ -26,7 +26,7 @@ avg_b = stat.mean(b)
 
 if avg_r > 250 and avg_g > 250 and avg_b > 250:
     print("The object is white")
-elif 100 < avg_r < 150 and 0 < avg_g < 100 and 0 < avg_b < 100:
+elif 80 < avg_r < 130 and 0 < avg_g < 100 and 0 < avg_b < 100:
     print("The object is red")
 else:
     print("Undetermined")
