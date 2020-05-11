@@ -31,12 +31,15 @@ avg_b = stat.mean(b)
 if avg_r > 250 and avg_g > 250 and avg_b > 250:
     leftTrack.run_timed(time_sp=1000, speed_sp=500)
     print("The object is white")
+
 elif 80 < avg_r < 130 and 0 < avg_g < 100 and 0 < avg_b < 100:
     rightTrack.run_timed(time_sp=1000, speed_sp=500)
     print("The object is red")
-elif 0 < avg_r < 100 and 80 < avg_g < 150 and 0 < avg_b < 100:
-    arm.run_timed(time_sp=1000, speed_sp=-500)
+
+elif 0 < avg_r < 100 and 80 < avg_g < 200 and 0 < avg_b < 100:
+    arm.run_timed(time_sp=1000, speed_sp=500)
     print("The object is green")
+
 else:
     print("Undetermined")
 
