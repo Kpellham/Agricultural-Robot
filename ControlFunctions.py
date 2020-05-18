@@ -1,106 +1,105 @@
-#NextSpeed = 0                                               #NextSpeed, I, previous_speed, Divisor, must be initilized on startup and will be overridden by function return
-#I = 0
-#previous_speed = [0,0,0,0,0]
-#Divisor = 0                                                            #Function call will take NextSpeed as an input
-
-#These values need to be initialized outside of this code
-
 from ev3dev2.auto import *
+# next_speed = 0                                               # NextSpeed, I, previous_speed, Divisor, must be initilized on startup and will be overridden by function return
+# count = 0
+# previous_speed = [0, 0, 0, 0, 0]
+# divisor = 0                                                            # Function call will take NextSpeed as an input
 
+# These values need to be initialized outside of this code
 
 arm = Motor(OUTPUT_C)
 
-def Harvesting(NextSpeed, Divisor):
+def harvesting(nextspeed, divisor):
     '''
     Controls the harvesting control of the robot
 
     Parameters
     ----------
-    NextSpeed : Int
+    nextspeed : Int
         Indicating the next starting position for the motor speed.
-    Divisor : Int
+    divisor : Int
         Indicating the number of values > 0 stored in PreviousSpeed
 
     Yields
     ------
-    NumSpeed : int
+    numspeed : int
         Percent of motor speed to harvest previous apple.
 
 
     '''
 
-    NewPosition = arm.Position                                              #Store current motor position
-    NumSpeed = 20                                                           #Default motor speed (starting point)
-    arm.run_timed(time_sp = 1000, speed_sp = SpeedPercent(NumSpeed))                             #Move motor for 1 sec at speed NumSpeed
-    ArmPosition = arm.Position                                              #Store new motor posistion
-    while ArmPosition != NewPosition:                                        #Compare the 2 position, if different stay in loop (indicating stem motion)
-            NewPosition = arm.Position                                     #Check position, try to move motor, check position again
-            arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))
-            ArmPosition = arm.Position
-    NewPosition = arm.Position                       #Exited loop indicating no change in position. Store position.
-    if NextSpeed != 0:                               #This is used if we have a previous stored speed value from last harvest
-            if Divisor != 5:                         #This is used if 5 data points have not been stored in PreviousSpeed
-                NumSpeed = NextSpeed - 20       #If previous NextSpeed value, use that - 20 as starting point for harvesting speed
-                arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))      #Try to remove apple using this speed
-                ArmPosition = arm.Position              #Determine new motor position
-                while ArmPosition == NewPosition:        #if no change, increase speed and try again
-                        NumSpeed + 5                    #We now have a previous value to start from for increments get smaller
-                        arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))      #Try to move arm
-                        ArmPosition = arm.Position      #Determine motor position
-            else:                                    #Else if 5 data points we are more sure of the nextSpeed values, smaller increments
-                NumSpeed = NextSpeed - 10       #More confident in starting position so smaller intervals
-                arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))      #Try to move motor
-                ArmPosition = arm.Position         #Determine position
-                while ArmPosition == NewPosition: #If no change continure to increase speed until removed
-                        NumSpeed + 3             #More confidence so smaller intervals
-                        arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))
-                        ArmPosition = arm.Position
+    newposition = arm.position                                              # Store current motor position
+    numspeed = 20                                                           # Default motor speed (starting point)
+    arm.run_timed(time_sp=1000, speed_sp=SpeedPercent(numspeed))            # Move motor for 1 sec at speed NumSpeed
+    armposition = arm.position                                              # Store new motor posistion
+    while armposition != newposition:                                       # Compare the 2 position, if different stay in loop (indicating stem motion)
+        newposition = arm.position                                          # Check position, try to move motor, check position again
+        arm.run_timed(time_sp=500, speed_sp=SpeedPercent(numspeed))
+        armposition = arm.position
+    newposition = arm.position                                              # Exited loop indicating no change in position. Store position.
+    if nextspeed != 0:                                                      # This is used if we have a previous stored speed value from last harvest
+        if divisor != 5:                                                    # This is used if 5 data points have not been stored in PreviousSpeed
+            numspeed = nextspeed - 20                                       # If previous NextSpeed value, use that - 20 as starting point for harvesting speed
+            arm.run_timed(time_sp=500, speed_sp=SpeedPercent(numspeed))     # Try to remove apple using this speed
+            armposition = arm.position                                      # Determine new motor position
+            while armposition == newposition:                               # if no change, increase speed and try again
+                numspeed = numspeed + 5                                     # We now have a previous value to start from for increments get smaller
+                arm.run_timed(time_sp=500, speed_sp=SpeedPercent(numspeed))      # Try to move arm
+                armposition = arm.position                                  # Determine motor position
+        else:                                                               # Else if 5 data points we are more sure of the nextSpeed values, smaller increments
+            numspeed = nextspeed - 10                                       # More confident in starting position so smaller intervals
+            arm.run_timed(time_sp=500, speed_sp=SpeedPercent(numspeed))     # Try to move motor
+            armposition = arm.position                                      # Determine position
+            while armposition == newposition:                               # If no change continure to increase speed until removed
+                numspeed = numspeed + 3                                     # More confidence so smaller intervals
+                arm.run_timed(time_sp=500, speed_sp=SpeedPercent(numspeed))
+                armposition = arm.position
     else:
-        NumSpeed = NumSpeed + 10                           #This is used if NextSpeed is zero indicating first harvest attempt
-        arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))              #Try to move motor
-        ArmPosition = arm.Position           #Determine position
-        while ArmPosition == NewPosition:        #If no change, increase speed and try again until change in position
-                NumSpeed = NumSpeed + 10
-                arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))
-                ArmPosition = arm.Position
-    #Finishing Havesting motion
-    arm.run_timed(time_sp = 8000, speed_sp = SpeedPercent(NumSpeed))
-    return NumSpeed
+        numspeed = numspeed + 10                                            # This is used if NextSpeed is zero indicating first harvest attempt
+        arm.run_timed(time_sp=500, speed_sp=SpeedPercent(numspeed))         # Try to move motor
+        armposition = arm.position                                          # Determine position
+        while armposition == newposition:                                   # If no change, increase speed and try again until change in position
+            numspeed = numspeed + 10
+            arm.run_timed(time_sp=500, speed_sp=SpeedPercent(numspeed))
+            armposition = arm.position
+    # Finishing Havesting motion
+    arm.run_timed(time_sp=8000, speed_sp=SpeedPercent(numspeed))
+    return numspeed
 
 
-def ControlArmSpeed(NumSpeed, I, previous_speed):          #PreviousSpeed and I all equal zero
+def control_arm_speed(numspeed, count, previous_speed):          #PreviousSpeed and I all equal zero
     '''Controls the output to the motors
 
     Parameters
     ----------
-    NumSpeed : Int
+    numspeed : Int
         Previous value of percent speed of motor to harvest apple.
-    I: Int
+    count: Int
         Count of array index to store NumSpeed in PreviousSpeed array
     previous_speed: array
         Int of previous harvest motor speed values
 
     Yields
     ------
-    NextSpeed : Int
+    nextspeed : Int
         Value used for starting speed pf motor.
-    I : Int
+    count : Int
         Count of array index to store NumSpeed in PreviousSpeed array
-    Divisor: Int
+    divisor: Int
         Contains the count of numbers > 0 in PreviousSpeed
     previous_speed: Array
         Int of previous harvest motor speed values
 
 
     '''
-    previous_speed[I] = NumSpeed
-    I = I + 1                                                   # I starts at index zero and stores Numspeed in the array then increase I value
-    if I > 4:                                               #If I gets above 4 restart the count, this only stores the 5 most recent points
-        I = 0
-    Divisor = 0
-    for i in range (0,4):                   # maybe 3
-        if previous_speed[i] > 0:        #Determine of many positive numbers are in the array, this will be used for average
-                Divisor = Divisor + 1
-    NextSpeed = (previous_speed[0] + previous_speed[1] + previous_speed[2] + previous_speed[3] + previous_speed[4]) / Divisor
-    #Sum all elements of the array and divide by the number of stored data points
-    return NextSpeed, I, Divisor, previous_speed
+    previous_speed[count] = numspeed
+    count = count + 1                                                   # I starts at index zero and stores Numspeed in the array then increase I value
+    if count > 4:                                               # If I gets above 4 restart the count, this only stores the 5 most recent points
+        count = 0
+    divisor = 0
+    for i in range(0, 4):                   # maybe 3
+        if previous_speed[i] > 0:        # Determine of many positive numbers are in the array, this will be used for average
+            divisor = divisor + 1
+    sum_speed = previous_speed[0]+previous_speed[1]+previous_speed[2]+previous_speed[3]+previous_speed[4]
+    nextspeed = sum_speed/divisor
+    # Sum all elements of the array and divide by the number of stored data points
+    return nextspeed, count, divisor, previous_speed
