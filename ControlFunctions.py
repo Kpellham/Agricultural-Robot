@@ -1,13 +1,16 @@
-#NextSpeed = 0                                               #NextSpeed, I, PreviousSpeed, Divisor, must be initilized on startup and will be overridden by function return
+#NextSpeed = 0                                               #NextSpeed, I, previous_speed, Divisor, must be initilized on startup and will be overridden by function return
 #I = 0
-#PreviousSpeed = [0,0,0,0,0]
+#previous_speed = [0,0,0,0,0]
 #Divisor = 0                                                            #Function call will take NextSpeed as an input
 
 #These values need to be initialized outside of this code
 
 from ev3dev2.auto import *
 
-def Harvesting(NextSpeed, Divsor):
+
+arm = Motor(OUTPUT_C)
+
+def Harvesting(NextSpeed, Divisor):
     '''
     Controls the harvesting control of the robot
 
@@ -53,11 +56,11 @@ def Harvesting(NextSpeed, Divsor):
                         arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))
                         ArmPosition = arm.Position
     else:
-        NumSpeed + 10                           #This is used if NextSpeed is zero indicating first harvest attempt
+        NumSpeed = NumSpeed + 10                           #This is used if NextSpeed is zero indicating first harvest attempt
         arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))              #Try to move motor
         ArmPosition = arm.Position           #Determine position
         while ArmPosition == NewPosition:        #If no change, increase speed and try again until change in position
-                NumSpeed + 10
+                NumSpeed = NumSpeed + 10
                 arm.run_timed(time_sp = 500, speed_sp = SpeedPercent(NumSpeed))
                 ArmPosition = arm.Position
     #Finishing Havesting motion
@@ -65,7 +68,7 @@ def Harvesting(NextSpeed, Divsor):
     return NumSpeed
 
 
-def ControlArmSpeed(NumSpeed, I, PreviousSpeed):          #PreviousSpeed and I all equal zero
+def ControlArmSpeed(NumSpeed, I, previous_speed):          #PreviousSpeed and I all equal zero
     '''Controls the output to the motors
 
     Parameters
@@ -74,7 +77,7 @@ def ControlArmSpeed(NumSpeed, I, PreviousSpeed):          #PreviousSpeed and I a
         Previous value of percent speed of motor to harvest apple.
     I: Int
         Count of array index to store NumSpeed in PreviousSpeed array
-    PreviousSpeed: array
+    previous_speed: array
         Int of previous harvest motor speed values
 
     Yields
@@ -85,19 +88,19 @@ def ControlArmSpeed(NumSpeed, I, PreviousSpeed):          #PreviousSpeed and I a
         Count of array index to store NumSpeed in PreviousSpeed array
     Divisor: Int
         Contains the count of numbers > 0 in PreviousSpeed
-    PreviousSpeed: Array
+    previous_speed: Array
         Int of previous harvest motor speed values
 
 
     '''
-    PreviousSpeed[I] = NumSpeed
-    I + 1                                                   # I starts at index zero and stores Numspeed in the array then increase I value
+    previous_speed[I] = NumSpeed
+    I = I + 1                                                   # I starts at index zero and stores Numspeed in the array then increase I value
     if I > 4:                                               #If I gets above 4 restart the count, this only stores the 5 most recent points
         I = 0
     Divisor = 0
     for i in range (0,4):                   # maybe 3
-        if PreviousSpeed[i] > 0:        #Determine of many positive numbers are in the array, this will be used for average
-                Divisor + 1
-    NextSpeed = (PreviousSpeed[0] + PreviousSpeed[1] + PreviousSpeed[2] + PreviousSpeed[3] + PreviousSpeed[4]) / Divisor
+        if previous_speed[i] > 0:        #Determine of many positive numbers are in the array, this will be used for average
+                Divisor = Divisor + 1
+    NextSpeed = (previous_speed[0] + previous_speed[1] + previous_speed[2] + previous_speed[3] + previous_speed[4]) / Divisor
     #Sum all elements of the array and divide by the number of stored data points
-    return NextSpeed, I, Divisor, PreviousSpeed
+    return NextSpeed, I, Divisor, previous_speed
