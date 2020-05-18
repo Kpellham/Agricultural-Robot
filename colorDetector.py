@@ -10,5 +10,3 @@ samp = np.zeros((25, 3))
 
 for i in range(0, 24):
     samp([i,0]) += colorSens.rgb
-
-
