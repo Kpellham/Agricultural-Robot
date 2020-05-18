@@ -11,13 +11,13 @@ rightTrack = Motor(OUTPUT_B)
 arm = Motor(OUTPUT_C)
 
 def proxLoop(sensor):
-    while sensor.proximity > 75:
+    while sensor.proximity > 35:
         pass
 
 leftTrack.run_forever()
 rightTrack.run_forever()
 
-proxloop(proxsens)
+proxLoop(proxSens)
 
 rightTrack.stop()
 leftTrack.stop()
