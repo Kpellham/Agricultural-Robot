@@ -2,10 +2,10 @@
 from ev3dev2.auto import *
 
 arm = Motor(OUTPUT_C)
-nextspeed = 40
-divisor = 1
+nextspeed = 0
+divisor = 0
 count = 0
-previous_speed_input = [100,50,50,50,50]
+previous_speed_input = [0,0,0,0,0]
 
 arm.on_for_seconds(SpeedPercent(-40), 9)
 # def harvesting(nextspeed, divisor):
@@ -31,7 +31,7 @@ arm.on_for_seconds(SpeedPercent((numspeed+20)), 5)            # Move motor for 1
 armposition = arm.position                                              # Store new motor position
 while armposition != newposition:                                       # Compare the 2 position, if different stay in loop (indicating stem motion)
     newposition = arm.position                                          # Check position, try to move motor, check position again
-    arm.on_for_seconds(SpeedPercent(numspeed), 1)
+    arm.on_for_seconds(SpeedPercent((numspeed - 10)), 1)
     armposition = arm.position
 newposition = arm.position                                              # Exited loop indicating no change in position. Store position.
 if nextspeed != 0:                                                      # This is used if we have a previous stored speed value from last harvest
@@ -40,7 +40,7 @@ if nextspeed != 0:                                                      # This i
         arm.on_for_seconds(SpeedPercent(numspeed), .5)       # Try to remove apple using this speed
         armposition = arm.position                                      # Determine new motor position
         while armposition == newposition:                               # if no change, increase speed and try again
-            numspeed = numspeed + 3                                     # We now have a previous value to start from so the increments get smaller
+            numspeed = numspeed + 5                                     # We now have a previous value to start from so the increments get smaller
             if numspeed > 90:
                 numspeed = 40
             arm.on_for_seconds(SpeedPercent(numspeed), 0.5)        # Try to move arm
@@ -50,7 +50,9 @@ if nextspeed != 0:                                                      # This i
         arm.on_for_seconds(SpeedPercent(numspeed), .5)       # Try to move motor
         armposition = arm.position                                      # Determine position
         while armposition == newposition:                               # If no change continue to increase speed until removed
-            numspeed = numspeed + 1                                     # More confidence so smaller intervals
+            numspeed = numspeed + 3                                     # More confidence so smaller intervals
+            if numspeed > 90:
+                numspeed = 40
             arm.on_for_seconds(SpeedPercent(numspeed), .5)
             armposition = arm.position
 else:
@@ -58,13 +60,15 @@ else:
     arm.on_for_seconds(SpeedPercent(numspeed), 1)           # Try to move motor
     armposition = arm.position                                          # Determine position
     while armposition == newposition:                                   # If no change, increase speed and try again until change in position
-        numspeed = numspeed + 5
+        numspeed = numspeed + 10
+        if numspeed > 90:
+            numspeed = 40
         arm.on_for_seconds(SpeedPercent(numspeed), .5)
         armposition = arm.position
     # Finishing Havesting motion
 arm.on_for_seconds(SpeedPercent(numspeed), 4)              # Apple is now removed from stem and tree so run modor to fully vertical position
 # return numspeed
-print(numspeed)
+print("Required percentage to remove apple was ", numspeed)
 
 #def control_arm_speed(numspeed, count, previous_speed_input):          # PreviousSpeed and count all equal zero
     #Controls the output to the motors
@@ -105,6 +109,7 @@ sum_speed = previous_speed[0]+previous_speed[1]+previous_speed[2]+previous_speed
 nextspeed = sum_speed/divisor
     # Sum all elements of the array and divide by the number of stored data points
 #    return nextspeed, count, divisor, previous_speed
-print(nextspeed)
+print("next speed setting is" , nextspeed)
 for i in range(0,5):
     print(previous_speed[i])
+
