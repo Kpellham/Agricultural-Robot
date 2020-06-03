@@ -36,7 +36,7 @@ def harvesting(nextspeed, divisor):
         time_count = time_count + 1
         if time_count > 17:
             print("No Results")
-            # return numspeed
+            return numspeed
     newposition = arm.position                                              # Exited loop indicating no change in position. Apple fully extented on stem. Store position.
     if nextspeed != 0:                                                      # This is used if we have a previous stored speed value from last harvest
         if divisor != 5:                                                    # This is used if 5 data points have not been stored in previous_speed
