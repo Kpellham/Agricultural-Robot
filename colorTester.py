@@ -3,7 +3,7 @@ import time
 from ev3dev2.auto import *
 from kalman import OneVarKalmanFilter
 
-def colorDetector(colorSens):
+def colorTester(colorSens):
     #colorSens = ColorSensor(INPUT_2)    # ColorSensor mapped to EV3 input 2
     #leftTrack = Motor(OUTPUT_A)         # left-Track motor mapped to EV3 output a
     #rightTrack = Motor(OUTPUT_B)        # right-Track motor mapped to EV3 output b
@@ -20,9 +20,8 @@ def colorDetector(colorSens):
 
     kalmanFilter = OneVarKalmanFilter(A, B, C, x, P, Q, R)
 
-    n = 200
-
     # Empty lists for working with data from sensor
+    n = 200
     sample_list = [0] * n                # Creates four lists all length 50.
     r = [0] * n                          # These lists must be initialized here
     g = [0] * n                          # as they will be filled with RGB data
