@@ -1,4 +1,6 @@
-def harvesting(nextspeed, divisor):
+from ev3dev2.auto import *
+
+def harvesting(nextspeed, divisor, arm):
 
     time_count = 0
     newposition = arm.position                                              # Store current motor position
