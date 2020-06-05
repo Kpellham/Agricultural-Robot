@@ -1,13 +1,7 @@
-#!/usr/bin/python3
-import time
-from ev3dev2.auto import *
 from kalman import OneVarKalmanFilter
+import time
 
 def colorTester(colorSens):
-    #colorSens = ColorSensor(INPUT_2)    # ColorSensor mapped to EV3 input 2
-    #leftTrack = Motor(OUTPUT_A)         # left-Track motor mapped to EV3 output a
-    #rightTrack = Motor(OUTPUT_B)        # right-Track motor mapped to EV3 output b
-    #arm = Motor(OUTPUT_C)
 
     # Initialize values for the Kalman Filter
     A = 1           # No process innovation
