@@ -1,5 +1,4 @@
 from kalman import OneVarKalmanFilter
-import time
 
 def colorTester(colorSens):
 
@@ -26,10 +25,6 @@ def colorTester(colorSens):
     green_estimate = []
     blue_estimate = []
 
-    colorSens.calibrate_white()         # Calibrate the color sensor for light conditions
-    print("Calibrated")
-    time.sleep(5)                       # 5 seconds wait to place test object
-
     for i in range(0, n):             # For loop to gather 50 'images' from color sensor
         sample = colorSens.rgb          # Loads sample with a tuple from the color sensor
         sample_list[i] = list(sample)   # Converts tuple into a list and then loads 'samp_list' at index 'i'
@@ -54,18 +49,18 @@ def colorTester(colorSens):
     # logic statements. These statements are rough estimates of r, g, and b values used to
     # determine if a certain color is present
 
-    if 30 < int(red_estimate[-1]) < 135 and 75 < int(green_estimate[-1]) < 150 and 10 < int(blue_estimate[-1]) < 70:
+    if 45 < int(red_estimate[-1]) < 120 and 75 < int(green_estimate[-1]) < 135 and 25 < int(blue_estimate[-1]) < 55:
         state = "ripe"
 
-    elif 0 < int(red_estimate[-1]) < 75 and 0 < int(green_estimate[-1]) < 50 and 0 < int(blue_estimate[-1]) < 50:
+    elif 5 < int(red_estimate[-1]) < 75 and 5 < int(green_estimate[-1]) < 50 and 5 < int(blue_estimate[-1]) < 50:
         state = "rotten"
 
     else:
         state = "growing"
 
+    print(red_estimate[-1])
+    print(green_estimate[-1])
+    print(blue_estimate[-1])
+
     return state
 
-# Print last value from the Kalman Filter
-# print(red_estimate[-1])
-# print(green_estimate[-1])
-# print(blue_estimate[-1])
