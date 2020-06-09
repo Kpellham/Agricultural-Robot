@@ -8,7 +8,7 @@ arm = Motor(OUTPUT_C)
 # previous_speed_input = [85,82,75,71,68]                                          # at the startup of robot
 
 # arm.on_for_seconds(SpeedPercent(-40), 9)                                    # Lowers arm to grab apple
-def harvesting(nextspeed, divisor):
+def harvesting(nextspeed, divisor, arm):
 
     # Controls the harvesting control of the robot
 

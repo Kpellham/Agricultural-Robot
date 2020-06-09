@@ -1,15 +1,4 @@
 #!/usr/bin/python3
-import time
-from ev3dev2.auto import *
-<<<<<<< HEAD
-
-s1 = ColorSensor(INPUT_2)
-s1.calibrate_white()
-print("ok")
-time.sleep(5)
-print(str(s1.rgb))
-
-=======
 from kalman import OneVarKalmanFilter
 
 def colorTester(colorSens):
@@ -43,7 +32,7 @@ def colorTester(colorSens):
 
     colorSens.calibrate_white()         # Calibrate the color sensor for light conditions
     print("Calibrated")
-    time.sleep(5)                       # 5 seconds wait to place test object
+    time.sleep(5)                      # 5 seconds wait to place test object
 
     for i in range(0, n):             # For loop to gather 50 'images' from color sensor
         sample = colorSens.rgb          # Loads sample with a tuple from the color sensor
@@ -84,4 +73,3 @@ def colorTester(colorSens):
 # print(red_estimate[-1])
 # print(green_estimate[-1])
 # print(blue_estimate[-1])
->>>>>>> scott-work
