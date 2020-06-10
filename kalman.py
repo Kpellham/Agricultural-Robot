@@ -1,3 +1,5 @@
+# https://github.com/lblackhall/pyconau2016/blob/master/kalman.py
+
 class OneVarKalmanFilter(object):
 
     def __init__(self, A, B, C, x, P, Q, R):
