@@ -1,13 +1,12 @@
-#!/usr/bin/python3
 from kalman import OneVarKalmanFilter
 
-def colorTester(colorSens):
-    #colorSens = ColorSensor(INPUT_2)    # ColorSensor mapped to EV3 input 2
-    #leftTrack = Motor(OUTPUT_A)         # left-Track motor mapped to EV3 output a
-    #rightTrack = Motor(OUTPUT_B)        # right-Track motor mapped to EV3 output b
-    #arm = Motor(OUTPUT_C)
+"""This is a function that uses the EV3 color sensor to collect data about 
+the object it is evaluating. This function makes use of a Kalman filter to
+smooth the, otherwise, noisy data given by the color sensor. """
 
-    # Initialize values for the Kalman Filter
+def colorTester(colorSens):
+
+    # Initialize values for the Scalar Kalman Filter
     A = 1           # No process innovation
     C = 1           # Measurement
     B = 0           # No control input
@@ -30,18 +29,17 @@ def colorTester(colorSens):
     green_estimate = []
     blue_estimate = []
 
-    colorSens.calibrate_white()         # Calibrate the color sensor for light conditions
-    print("Calibrated")
-    time.sleep(5)                      # 5 seconds wait to place test object
-
-    for i in range(0, n):             # For loop to gather 50 'images' from color sensor
+    for i in range(0, n):               # For loop to gather n samples from color sensor
         sample = colorSens.rgb          # Loads sample with a tuple from the color sensor
-        sample_list[i] = list(sample)   # Converts tuple into a list and then loads 'samp_list' at index 'i'
+        sample_list[i] = list(sample)   # Converts tuple into a list and then loads 'sample_list' at index 'i'
         r[i] = sample[0]                # Strips 'r' components for further processing
         g[i] = sample[1]                # Strips 'g' components for further processing
         b[i] = sample[2]                # Strips 'b' components for further processing
 
-    # Simulate the data arriving sequentially
+    """Data arriving sequentially: 
+    The following for loops make use of the Kalman filter which returns the
+    filtered estimate of the red, green and blue components of 'image' seen
+    by the color sensor."""
     for data in r:
         kalmanFilter.step(0, data)
         red_estimate.append(kalmanFilter.currentState())
@@ -54,22 +52,23 @@ def colorTester(colorSens):
         kalmanFilter.step(0, data)
         blue_estimate.append(kalmanFilter.currentState())
 
-    # If-elseif-else statement used to determine what action should be taken based off of
-    # logic statements. These statements are rough estimates of r, g, and b values used to
-    # determine if a certain color is present
+    """If-elseif-else statement used to determine what action should be taken based off of
+    logic statements. These statements are rough estimates of r, g, and b values used to
+    determine if a certain color is present."""
 
-    if 30 < int(red_estimate[-1]) < 135 and 75 < int(green_estimate[-1]) < 150 and 10 < int(blue_estimate[-1]) < 70:
+    if 45 < int(red_estimate[-1]) < 120 and 75 < int(green_estimate[-1]) < 135 and 25 < int(blue_estimate[-1]) < 55:
         state = "ripe"
 
-    elif 0 < int(red_estimate[-1]) < 75 and 0 < int(green_estimate[-1]) < 50 and 0 < int(blue_estimate[-1]) < 50:
+    elif 5 < int(red_estimate[-1]) < 75 and 5 < int(green_estimate[-1]) < 50 and 5 < int(blue_estimate[-1]) < 50:
         state = "rotten"
 
     else:
         state = "growing"
 
+    print(red_estimate[-1])     # Prints the last element of the red_estimate list
+    print(green_estimate[-1])   # Prints the last element of the green_estimate list
+    print(blue_estimate[-1])    # Prints the last element of the blue_estimate list
+
+    # returns the state of the apple for string comparison in the main program
     return state
 
-# Print last value from the Kalman Filter
-# print(red_estimate[-1])
-# print(green_estimate[-1])
-# print(blue_estimate[-1])
