@@ -3,12 +3,12 @@ from math import pi
 motorRadius = 0.015#i require the radius of motors for further calculations of the Agribot movement
 motordis = 0.081#I require the distance between the motors so im setting this value to zero for now
 
-def turnRadius(m1, m2, r, speedI, dis, time):
+def turnRadius(m1, m2, r, speedI, time):
     """
     this function takes a radius for the robot to turn around and relates inner track
     speed to outer track speed to achieve proper turning
     """
-    speedO = speedI * r * (r+dis) / r#this equation relates the speed of the inner an outer track of the Agribot
+    speedO = speedI * r * (r+motordis) / r#this equation relates the speed of the inner an outer track of the Agribot
 
     m1.run_timed(time_sp = time, speed_sp = speedI)
     m2.run_times(time_sp = time, speed_sp = speedO)
