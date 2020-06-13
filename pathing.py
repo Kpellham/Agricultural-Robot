@@ -84,7 +84,7 @@ def getNumApp(m1,m2,s1):
     print(findPeeks(filt))
     return posit, minix
 
-def returnApp(m1, m2, x, ix, apple):
+def returnApp(m1, m2, x, ix, arm, apple):
     """
     this functions is called after the apple is picked up and needs to
     sorted into rotten and ripe
@@ -109,11 +109,24 @@ def returnApp(m1, m2, x, ix, apple):
 
     """
     this decision structure tells the robot how to sort the apple after hopefully
-    returning to its origin
+    returning to its origin if the robot is at its orging it only need to put turn
+    positive or negative 45 degrees to sort the apple
     """
     if apple == "rotten":
         tk.turnZdeg(m1, m2, 300, -45)
         while m1.is_running and m2.is_running:
+            pass
+        arm.run_timed(time_sp=11000, speed_sp=-500)
+        while arm.is_running():
+            pass
+        tk.moveTach(m1, m2, 300, 2*360)
+        while m1.is_running() and m2.is_running:
+            pass
+        tk.moveTach(m1, m2, -300, -2*360)
+        while m1.is_running() and m2.is_running:
+            pass
+        arm.run_timed(time_sp=11000, speed_sp=500)
+        while arm.is_running():
             pass
         tk.turnZdeg(m1, m2, 300, -135)
         while m1.is_running and m2.is_running:
@@ -121,6 +134,18 @@ def returnApp(m1, m2, x, ix, apple):
     elif apple == "ripe":
         tk.turnZdeg(m1, m2, 300, 45)
         while m1.is_running and m2.is_running:
+            pass
+        arm.run_timed(time_sp=11000, speed_sp=-500)
+        while arm.is_running():
+            pass
+        tk.moveTach(m1, m2, 300, 2*360)
+        while m1.is_running() and m2.is_running:
+            pass
+        tk.moveTach(m1, m2, -300, -2*360)
+        while m1.is_running() and m2.is_running:
+            pass
+        arm.run_timed(time_sp=11000, speed_sp=500)
+        while arm.is_running():
             pass
         tk.turnZdeg(m1, m2, 300, 135)
         while m1.is_running and m2.is_running:

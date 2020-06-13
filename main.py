@@ -5,7 +5,7 @@ from ev3dev2.auto import *
 from ControlFunctions import control_arm_speed
 from ControlFunctions import harvesting
 from colorTester import colorTester
-import somecode as sc
+import pathing as sc
 
 proxSens = InfraredSensor(INPUT_1)
 colorSens = ColorSensor(INPUT_3)    # ColorSensor mapped to EV3 input 2
@@ -33,47 +33,54 @@ time.sleep(5)
 while not arm.is_stalled:
     arm.run_forever(speed_sp=500)
 arm.stop()
-
-# TODO - KYLE
-
+#this value is amount of tachos required to move a linear distane of 32 inches
 tach = 0.8128/(2*sc.pi*sc.tk.motorRadius)*360
-sc.tk.moveTach(leftTrack, rightTrack, 300, tach)
-while leftTrack.is_running and rightTrack.is_running:
-    pass
-posit, minix = sc.getNumApp(leftTrack, rightTrack, proxSens)
+"""
+this for loop runs the apple finding algorithm 4 times. however because of
+compounding error the robot may need to be reset to origin after each run
+"""
+for i in range(0, 3):
 
-sc.tk.moveTach(leftTrack, rightTrack, 299, -360*2)
-while leftTrack.is_running and rightTrack.is_running:
-    pass
+    #the robot was predetermined to move 32 inches to get to the scanning area
+    sc.tk.moveTach(leftTrack, rightTrack, 300, tach)
+    while leftTrack.is_running and rightTrack.is_running:
+        pass
+    #after getting to the scanning area a scan is performed
+    posit, minix = sc.getNumApp(leftTrack, rightTrack, proxSens)
 
-while not arm.is_stalled:
-    arm.run_forever(speed_sp=-500)
-arm.stop()
+    # next 3 movements are made to get the motor in optimal position to grab the apple
+    sc.tk.moveTach(leftTrack, rightTrack, 299, -360*2)
+    while leftTrack.is_running and rightTrack.is_running:
+        pass
 
-sc.tk.moveTach(leftTrack, rightTrack, 300, 360*2.85)
-while leftTrack.is_running and rightTrack.is_running:
-    pass
+    while not arm.is_stalled:
+        arm.run_forever(speed_sp=-500)
+    arm.stop()
 
-while True:
+    sc.tk.moveTach(leftTrack, rightTrack, 300, 360*2.85)
+    while leftTrack.is_running and rightTrack.is_running:
+        pass
 
-    if colorTester(colorSens) == "ripe":
-        print("ripe")
-        numSpeed = harvesting(nextSpeed, divisor, arm)
-        nextSpeed, count, divisor, previous_speed = control_arm_speed(numSpeed, count, previous_speed)
-        time.sleep(1)
-        # TODO - Kyle
-        sc.returnApp(leftTrack, rightTrack, posit, minix, "ripe")
-    elif colorTester(colorSens) == "rotten":
-        print("rotten")
-        numSpeed = harvesting(nextSpeed, divisor, arm)
-        nextSpeed, count, divisor, previous_speed = control_arm_speed(numSpeed, count, previous_speed)
-        time.sleep(1)
-        # TODO - Kyle
-        sc.returnApp(leftTrack, rightTrack, posit, minix, "rotten")
-    else:
-        run = run + 1
-        if run == 3:
-            run = 0
-            sc.returnApp(leftTrack, rightTrack, posit, minix, "pass")
-        print("pass")
-        # TODO - Kyle
+    run1 = 0        #run is a sentinel variable to get the robot to scan for apples
+    while run1 < 2:
+        if colorTester(colorSens) == "ripe":
+            print("ripe")
+            numSpeed = harvesting(nextSpeed, divisor, arm)
+            nextSpeed, count, divisor, previous_speed = control_arm_speed(numSpeed, count, previous_speed)
+            time.sleep(1)
+            sc.returnApp(leftTrack, rightTrack, posit, minix, "ripe")
+            run1 = run1 + 1
+        elif colorTester(colorSens) == "rotten":
+            print("rotten")
+            numSpeed = harvesting(nextSpeed, divisor, arm)
+            nextSpeed, count, divisor, previous_speed = control_arm_speed(numSpeed, count, previous_speed)
+            time.sleep(1)
+            sc.returnApp(leftTrack, rightTrack, posit, minix, "rotten")
+            run1 = run1 + 1
+        else:
+            print("pass")
+            run = run + 1
+            if run == 3:
+                run = 0
+                sc.returnApp(leftTrack, rightTrack, posit, minix, "pass")
+        run1 = run1 + 1
