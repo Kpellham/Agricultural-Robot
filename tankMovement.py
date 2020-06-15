@@ -25,12 +25,10 @@ def turnZdeg(m1, m2, speed, deg):
     this functions takes an angle in degrees and converts it to motor rotations
     and with the motor rotations the robot turns the set amount of degrees
     """
-    rad = deg*2/360                 #converting degree to pi radians
-    rot = rad*motordis/motorRadius  #converts radians to motor rotations
-    fac = m1.count_per_rot/2        #this factor converts radians to tachos
+    rot = deg*motordis/motorRadius  #converts degrees to motor rotations
 
-    m1.run_to_rel_pos(position_sp=fac*rot,speed_sp=speed)
-    m2.run_to_rel_pos(position_sp=-1*fac*rot,speed_sp=-1*speed)
+    m1.run_to_rel_pos(position_sp=rot,speed_sp=speed)
+    m2.run_to_rel_pos(position_sp=-1*rot,speed_sp=-1*speed)
 
 def turnTach(m1, m2, speed, tacho):
     """

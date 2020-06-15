@@ -11,9 +11,9 @@ in this code the following commands appear often
 while m1.is_running and m2.is_running:
     pass
 
-this while loop is used to keep the python script synchronized whith motor movement.
-this loop isnot implemented into the tank movement file because you can replace the pass
-other code that you want to run while the motors are running.
+this while loop is used to keep the python script synchronized with motor movement.
+this loop is not implemented into the tank movement file because you can replace the pass
+with other code that you want to run while the motors are running.
 """
 def findPeeks(x):
     """
@@ -109,10 +109,13 @@ def returnApp(m1, m2, x, ix, arm, apple):
 
     """
     this decision structure tells the robot how to sort the apple after hopefully
-    returning to its origin if the robot is at its orging it only need to put turn
+    returning to its origin if the robot is at its origin it only need to turn
     positive or negative 45 degrees to sort the apple
     """
     if apple == "rotten":
+        """
+        this code turns and pushs the apple forward into the ripe or rotten apple
+        """
         tk.turnZdeg(m1, m2, 300, -45)
         while m1.is_running and m2.is_running:
             pass

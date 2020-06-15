@@ -63,6 +63,11 @@ for i in range(0, 3):
 
     run1 = 0        #run is a sentinel variable to get the robot to scan for apples
     while run1 < 2:
+        """
+        this decision structure should only run once if the apple is decided to be ripe or rotten
+        but the code should run twice if the apple is decided to be a pass. this is decided to
+        add redundancy so the code has less error
+        """
         if colorTester(colorSens) == "ripe":
             print("ripe")
             numSpeed = harvesting(nextSpeed, divisor, arm)
